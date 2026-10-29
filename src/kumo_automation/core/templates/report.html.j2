@@ -1,0 +1,63 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Deployment Report — {{ profile.name|e }}</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; margin: 32px; color: #1a1a1a; }
+  h1 { font-size: 20px; } h2 { font-size: 15px; margin-top: 26px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid #eee; }
+  .ok { color: #137333; font-weight: 600; } .bad { color: #c5221f; font-weight: 600; }
+  .warn { color: #b06000; font-weight: 600; }
+  .pill { display:inline-block; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; }
+  .pill.ok { background:#e6f4ea; } .pill.bad { background:#fce8e6; }
+  .muted { color:#666; font-size:12px; }
+</style>
+
+<h1>KumoMTA Deployment Report</h1>
+<p class="muted">
+  Customer/Server: <b>{{ profile.name|e }}</b> · Environment: <b>{{ profile.environment.value }}</b> ·
+  Generated: {{ generated }} · App v{{ version }}
+</p>
+<p>
+  Result:
+  {% if deploy and deploy.success %}<span class="pill ok">SUCCESS</span>
+  {% elif deploy and deploy.rolled_back %}<span class="pill bad">FAILED — ROLLED BACK</span>
+  {% else %}<span class="pill bad">FAILED</span>{% endif %}
+  {% if deploy and deploy.dry_run %}<span class="muted">(dry-run)</span>{% endif %}
+</p>
+
+<h2>Server</h2>
+<table>
+  <tr><th>SSH host</th><td>{{ profile.ssh.host|e }}:{{ profile.ssh.port }}</td></tr>
+  <tr><th>IPs</th><td>{{ profile.ips|length }}</td></tr>
+  <tr><th>SMTP port</th><td>{{ profile.smtp_port }} (STARTTLS: {{ profile.starttls }})</td></tr>
+  <tr><th>Password strategy</th><td>{{ profile.password_strategy.value }}</td></tr>
+  <tr><th>Backup</th><td>{{ deploy.backup_path if deploy else "-" }}</td></tr>
+</table>
+
+<h2>Deployment steps</h2>
+<table><tr><th>Step</th><th>Status</th><th>Detail</th></tr>
+{% for s in (deploy.steps if deploy else []) %}
+  <tr><td>{{ s.name }}</td>
+      <td class="{{ 'ok' if s.ok else 'bad' }}">{{ 'OK' if s.ok else 'FAIL' }}</td>
+      <td>{{ s.detail|e }}</td></tr>
+{% endfor %}
+</table>
+
+<h2>DNS validation</h2>
+<table><tr><th>Type</th><th>Name</th><th>Status</th><th>Found</th></tr>
+{% for d in dns %}
+  <tr><td>{{ d.record_type }}</td><td>{{ d.name|e }}</td>
+      <td class="{{ 'ok' if d.status=='ok' else ('warn' if d.status=='mismatch' else 'bad') }}">{{ d.status }}</td>
+      <td class="muted">{{ (d.found or '')|e|truncate(80) }}</td></tr>
+{% endfor %}
+</table>
+
+<h2>Health checks</h2>
+<table><tr><th>Check</th><th>Status</th><th>Detail</th></tr>
+{% for h in health %}
+  <tr><td>{{ h.name }}</td>
+      <td class="{{ 'ok' if h.ok else 'bad' }}">{{ 'PASS' if h.ok else 'FAIL' }}</td>
+      <td class="muted">{{ h.detail|e }}</td></tr>
+{% endfor %}
+</table>

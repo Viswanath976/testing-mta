@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+# local project data / reports / secrets
+.env
+kumo.db
+dns-out/dkim-example.com.key
+data/
+reports/
+*.log

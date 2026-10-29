@@ -1,0 +1,4 @@
+cidr,domain,hostname_pattern,username_pattern
+203.0.113.0/24,shopmail.com,s{n}.{domain},s{n}
+198.51.100.0/25,newsmail.com,smtp{n}.{domain},smtp{n}
+192.0.2.0/28,promo.com,{word}.{domain},{word}

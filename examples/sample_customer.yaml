@@ -1,0 +1,46 @@
+name: Acme Corp
+notes: Example customer with one testing and one production server.
+servers:
+  - name: Test Server 01
+    environment: testing
+    ssh:
+      host: 198.23.177.154
+      port: 22
+      username: root
+      use_password: true          # password fetched at deploy time (not stored)
+    password_strategy: shared
+    shared_password: CHANGE_ME
+    smtp_port: 587
+    starttls: true
+    domains: [example.com]
+    dns:
+      dkim_selector: s1
+    ips:
+      - ip: 203.0.113.10
+        hostname: alpha.example.com
+        username: alpha
+        domain: example.com
+      - ip: 203.0.113.11
+        hostname: cedar.example.com
+        username: cedar
+        domain: example.com
+
+  - name: Prod Server 01
+    environment: production
+    ssh:
+      host: 209.127.37.246
+      username: root
+      use_password: true
+    password_strategy: per_ip     # production: one SMTP user (+ password) per IP
+    smtp_port: 587
+    domains: [example.com]
+    monitoring:
+      enabled: true
+      prometheus_hub: 209.127.37.246   # central hub allowed to scrape :8000
+      display: "Prod Server 01 (prod01 | 209.127.37.246)"
+    ips:
+      - ip: 23.229.78.65
+        hostname: summit.example.com
+        username: summit
+        password: per-ip-secret-1
+        domain: example.com

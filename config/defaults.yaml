@@ -1,0 +1,25 @@
+# Application defaults / conventions. Change these (not code) to adjust behaviour.
+# Wired progressively; Phase 1 uses smtp_port + segment durations already in templates.
+
+naming:
+  hostname_pattern: "{word}.{domain}"
+  username_pattern: "{word}"
+
+kumomta:
+  smtp_port: 587
+  starttls: true
+  segment_duration:
+    testing: "5s"
+    production: "10s"
+  egress:
+    ip_lookup_strategy: Ipv4Only
+    connect_timeout: "15s"
+
+monitoring:
+  # central hub defaults (Phase 3)
+  loki_push_path: "/loki/api/v1/push"
+  prometheus_targets_dir: "/etc/prometheus/targets"
+
+paths:
+  remote_policy_dir: "/opt/kumomta/etc/policy"
+  kumod: "/opt/kumomta/sbin/kumod"

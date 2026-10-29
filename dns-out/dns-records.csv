@@ -1,0 +1,8 @@
+type,name,value,ttl,action,note
+A,alpha.example.com,"203.0.113.10",3600,add,"host -> IP"
+PTR,203.0.113.10,"alpha.example.com",3600,review,"reverse DNS — set at the IP provider"
+A,cedar.example.com,"203.0.113.11",3600,add,"host -> IP"
+PTR,203.0.113.11,"cedar.example.com",3600,review,"reverse DNS — set at the IP provider"
+TXT,example.com,"v=spf1 ip4:203.0.113.10 ip4:203.0.113.11 -all",3600,merge,"SPF (merged with existing — safe)"
+TXT,s1._domainkey.example.com,"v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmy3pDRyO3nkc3oh5uYePGg+Cu35PQ7UVMaVu/+gWagOekeQC55CB74S1+Q+qsbUJ5R67OEIWHfIgfncIEgjpgNDtHq3Edbv9X5rsudMVsfHUvg1ZiIomGDxcETXdgajv7RPmZ9jqIqNAZO6xs5bFnkcZY28LrrJWgdgzZHZRwiQJ+bfPKMnqpK2e2zPkq5KGHYDr9v1wDNrl/Zz8dWTyV0I0PeUi/xFKZd6x+lKuChgsnPm/LxwGkp8w3P7KLDDz5pj9qFsXlri+o/ejzFrEWQTUAUkfytIBhaFt0F3avzLr+Duyg9k0tnpe2XojFqsvPn4fQKa3CD86RuRTxyjlZQIDAQAB",3600,add,"DKIM public key (private key installed on server)"
+TXT,_dmarc.example.com,"v=DMARC1; p=none; sp=none; rua=mailto:dmarc@example.com; adkim=r; aspf=r",3600,add,"DMARC"

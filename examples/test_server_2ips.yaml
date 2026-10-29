@@ -1,0 +1,25 @@
+# Single SERVER profile for the UI "Import Server YAML…" dialog.
+# Test server 198.23.177.154, two IPs, testing profile, shared SMTP password.
+name: Test Server 01
+environment: testing
+ssh:
+  host: 198.23.177.154
+  port: 22
+  username: root
+  use_password: true          # SSH password is asked at deploy time, never stored
+password_strategy: shared
+shared_password: TestPass123  # change to a real value before a LIVE deploy
+smtp_port: 587
+starttls: true
+domains: [nutriflorahub.com]
+dns:
+  dkim_selector: s1
+ips:
+  - ip: 213.209.156.5
+    hostname: alpha.nutriflorahub.com
+    username: alpha
+    domain: nutriflorahub.com
+  - ip: 213.209.156.6
+    hostname: beta.nutriflorahub.com
+    username: beta
+    domain: nutriflorahub.com
